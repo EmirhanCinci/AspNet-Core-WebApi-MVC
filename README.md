@@ -48,3 +48,7 @@ Bu proje, katmanlı bir mimari kullanılarak tasarlanmıştır. Aşağıda proje
 ## Proje Tanıtım Videosu
 
 [Tanıtım Videosu](https://www.youtube.com/watch?v=2Ii6Ee2u35Y)
+
+## NOT
+
+Proje içerisindeki MovieAppContext sınıfındaki bağlantı yolu çalıştırılan bilgisayara göre düzenlenmelidir.
