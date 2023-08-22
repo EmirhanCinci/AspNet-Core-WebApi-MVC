@@ -1,0 +1,140 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items;
+@model List<GenderWithPersonsItem>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <script>
+        // Tablo için gerekli JS komutları
+        $(document).ready(function () {
+            $("#example1").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                order: [
+                    [2, 'desc']
+                ],
+                "columnDefs": [{
+                    "targets": 4,
+                    "orderable": false,
+                }],
+                "lengthChange": false,
+                "paging": false,
+                "searching": false
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}
+
+<!-- Cinsiyet Etiketi Başlangıç -->
+<div class="row">
+    <!-- Cinsiyet Tablosu Etiketi Başlangıç  -->
+    <div class="col-12">
+        <div class="card">
+            <!-- Başlık Etiketi Başlangıç -->
+            <div class="card-header">
+                <h2>CİNSİYETLER</h2>
+            </div>
+            <!-- Başlık Etiketi Bitiş -->
+
+            <!-- Tablo Etiketi Başlangıç -->
+            <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cinsiyet Id</th>
+                            <th>Cinsiyet</th>
+                            <th>Kayıtlı Kişi Sayısı</th>
+                            <th>Tüm Kayıtlı Kişilere Göre Yüzdelik</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var totalPersons = item.Persons.Count;
+                            var totalPersonCount = Model.Sum(prd => prd.Persons.Count);
+                            var percentage = totalPersonCount > 0 ? ((double)totalPersons / totalPersonCount) * 100 : 0;
+
+                            <tr>
+                                <th>@item.Id</th>
+                                <th>@item.Name</th>
+                                <th><span class="text-danger">@totalPersons</span></th>
+                                <th>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-danger" style="width: @percentage.ToString("0")%"></div>
+                                    </div>
+                                    <span class="badge bg-dark">@String.Format("%{0:F2}", percentage)</span>
+                                </th>
+                                <th>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#modal-primary-@item.Id">Kişileri Göster</button>
+                                        <div class="modal fade" id="modal-primary-@item.Id">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">@item.Name Cinsiyetine Kayıtlı Kişiler</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul>
+                                                            @foreach (var movie in item.Persons)
+                                                            {
+                                                                <li>@movie.FullName</li>
+                                                            }
+                                                            @if (item.Persons.Count == 0)
+                                                            {
+                                                                <li>Herhangi bir kişi kaydı bulunamadı.</li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Cinsiyet Id</th>
+                            <th>Cinsiyet</th>
+                            <th>Kayıtlı Kişi Sayısı</th>
+                            <th>Tüm Kayıtlı Kişilere Göre Yüzdelik</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Tablo Etiketi Bitiş -->
+        </div>
+    </div>
+    <!-- Cinsiyet Tablosu Etiketi Bitiş -->
+</div>
+<!-- Cinsiyet Etiketi Bitiş -->

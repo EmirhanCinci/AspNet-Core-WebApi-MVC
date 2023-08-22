@@ -1,0 +1,60 @@
+﻿@using MovieApp.MvcWebUI.Models.ViewModels;
+@model PageViewModel
+
+<!-- Navbar Etiketi Başlangıç -->
+<nav class="navbar navbar-expand-lg bg-dark sticky-top">
+    <div class="container-fluid px-5">
+        <!-- Logo Etiketi -->
+        <a class="navbar-brand fs-1 fw-bold text-warning me-5" href="/Home/Index">CNC Film</a>
+
+        <!-- Toggle Butonu -->
+        <button class="btn btn-dark bg-warning navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menü Linkleri Kapsayıcısı Başlangıç -->
+        <div div class="collapse navbar-collapse py-2" id="navbarToggler">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center fw-medium">
+                <li class="nav-item"><a class="btn btn-warning nav-link text-white mx-3" href="/Movie">Filmler</a></li>
+                <li class="nav-item">
+                    <a class="btn btn-warning nav-link text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#demo">Kategoriler</a>
+                </li>
+                <li class="nav-item"><a class="btn btn-warning nav-link text-white mx-3" href="/Person/Actors">Oyuncular</a></li>
+                <li class="nav-item"><a class="btn btn-warning nav-link text-white mx-3" href="/Person/Directors">Yönetmenler</a></li>
+            </ul>
+            <div>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-center">
+                    <li class="nav-item text-center"><a class="btn btn-warning nav-link text-white mx-3" href="/Home/Index/#about">Hakkımızda</a></li>
+                    <li class="nav-item text-center"><a class="btn btn-warning nav-link text-white mx-3" href="/Contact/Index">İletişim</a></li>
+                    @if (Model.ActiveUser != null)
+                    {
+                        <li class="nav-item text-center"><a class="btn btn-warning nav-link text-white mx-3" href="/Profile/Index">Profilim</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item text-center"><a class="btn btn-warning nav-link text-white mx-3" href="/Authentication/LogIn">Giriş</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- Menü Linkleri Kapsayıcısı Bitiş -->
+    </div>
+</nav>
+<!-- Navbar Etiketi Bitiş -->
+
+<!-- Kategoriler OffCanvas Etiketi Başlangıç -->
+<div class="offcanvas offcanvas-start bg-dark text-white" id="demo">
+    <div class="offcanvas-header">
+        <h1 class="offcanvas-title">Kategoriler</h1>
+        <button type="button" class="btn-close bg-warning" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="list-group">
+            @foreach (var item in Model.Categories)
+            {
+                <a href="/Category/Movies/@item.Id" class="list-group-item list-group-item-action">@item.Name</a>
+            }
+        </div>
+    </div>
+</div>
+<!-- Kategoriler OffCanvas Etiketi Bitiş -->

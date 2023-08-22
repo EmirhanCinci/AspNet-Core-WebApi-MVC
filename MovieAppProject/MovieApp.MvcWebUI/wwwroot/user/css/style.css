@@ -1,0 +1,90 @@
+#carouselFade img {
+    width: 100%;
+    height: calc(100vh - 85px);
+}
+
+#carousel-caption {
+    background: rgba(13, 10, 12, 0.8);
+}
+
+.border-bottom {
+    width: 150px;
+    height: 6px;
+    background-color: #EF6D6D;
+}
+
+#features i {
+    color: #EF6D6D;
+}
+
+#most-popular-movies .card {
+    transition: all 0.8s;
+}
+
+#most-popular-movies .row:hover .card {
+    filter: blur(5px);
+    transform: scale(0.95);
+}
+
+#most-popular-movies .row .card:hover {
+    cursor: pointer;
+    filter: blur(0px);
+    transform: scale(1.1);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+#asked-question p {
+    text-align: left;
+}
+
+#other-actors img, #other-directors img {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    transition: all 0.8s;
+}
+
+#other-actors .row:hover img, #other-directors .row:hover img {
+    filter: blur(2px);
+    opacity: 0.75;
+}
+
+#other-actors .row img:hover, #other-directors .row img:hover {
+    filter: blur(0px);
+    opacity: 1.0;
+    transform: translateY(-30px);
+}
+
+#owl-demo2 .item img {
+    cursor: pointer;
+    display: block;
+    height: 350px;
+    transition: all 0.8s;
+}
+
+#owl-demo2 .item img:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    transform: scale(0.85);
+}
+
+#comment-actors .row .row, #comment-directors .row .row {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.checked {
+    color: orange;
+}
+
+#other-movies img {
+    height: 50vh;
+}
+
+@media (max-width: 768px) {
+    #carouselFade img {
+        height: 50vh;
+    }    
+}
+
+@media (max-width: 970px) {
+    #movie-categories {
+        display: none;
+    }    
+}

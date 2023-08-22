@@ -1,0 +1,51 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome sitesi bağlantı etiketi -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Bootstrap icon sitesi bağlantı etiketi -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- bootstrap.min.css dosyası bağlantı etiketi -->
+    <link rel="stylesheet" href="~/user/css/bootstrap.min.css">
+    <!-- style.css dosyası bağlantı etiketi -->
+    <link rel="stylesheet" href="~/user/css/style.css">
+
+    @RenderSection("customStyles",false)
+
+    <title>Sinematik Film Keyfi için CNC</title>
+</head>
+<body>
+    <partial name="_Navbar" />
+
+    <main>
+        <partial name="Home/_Slider" />
+
+        <!-- Most Popular Movies Etiketi Başlangıç -->
+        <section id="most-popular-movies" class="container text-center my-5">
+            @RenderBody()
+        </section>
+        <!-- Most Popular Movies Etiketi Bitiş -->
+
+        <partial name="Home/_Features" />
+
+        <partial name="Home/_Question" />
+
+        <partial name="Home/_About" />
+    </main>
+
+    <partial name="_Footer" />
+
+    <!-- bootstrap.bundle.min.js dosyası bağlantı etiketi -->
+    <script src="~/user/js/bootstrap.bundle.min.js"></script>
+    <!-- jquery.min.js dosyası bağlantı etiketi -->
+    <script src="~/user/js/jquery.min.js"></script>
+    <!-- script.js dosyası bağlantı etiketi -->
+    <script src="~/user/js/script.js"></script>
+
+    @RenderSection("customScripts",false)
+</body>
+</html>

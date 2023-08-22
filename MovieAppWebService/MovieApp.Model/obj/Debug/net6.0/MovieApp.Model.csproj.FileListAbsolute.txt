@@ -1,0 +1,60 @@
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.deps.json
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.dll
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.pdb
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.AssemblyReference.cache
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfoInputs.cache
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfo.cs
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CoreCompileInputs.cache
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CopyComplete
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\refint\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Dersler\Vektörel Akademi\Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\ref\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.deps.json
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.dll
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.pdb
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.AssemblyReference.cache
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfoInputs.cache
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfo.cs
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CoreCompileInputs.cache
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CopyComplete
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\refint\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Projem\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\ref\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.deps.json
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.dll
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.pdb
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.AssemblyReference.cache
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfoInputs.cache
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfo.cs
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CoreCompileInputs.cache
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CopyComplete
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\refint\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Son Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\ref\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.deps.json
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.dll
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\bin\Debug\net6.0\Infrastructure.pdb
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.AssemblyReference.cache
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfoInputs.cache
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.AssemblyInfo.cs
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CoreCompileInputs.cache
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.csproj.CopyComplete
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\refint\MovieApp.Model.dll
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\MovieApp.Model.pdb
+C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppWebService\MovieApp.Model\obj\Debug\net6.0\ref\MovieApp.Model.dll

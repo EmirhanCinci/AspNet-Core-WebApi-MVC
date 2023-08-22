@@ -1,0 +1,126 @@
+﻿@using MovieApp.MvcWebUI.Models.ViewModels;
+@model PersonViewModel
+@{
+    Layout = "~/Views/Shared/_OtherLayout.cshtml";
+}
+
+@section customStyles{
+    <!-- owl.carousel.css dosyası bağlantı etiketi -->
+    <link rel="stylesheet" href="~/user/css/owl.carousel.css">
+    <!-- owl.theme.css dosyası bağlantı etiketi -->
+    <link rel="stylesheet" href="~/user/css/owl.theme.css">
+    <!-- lightbox.min.css dosyası bağlantı etiketi -->
+    <link rel="stylesheet" href="~/user/css/lightbox.min.css">
+}
+
+@section customScripts {
+    <!-- owl.carousel.js dosyası bağlantı etiketi -->
+    <script src="~/user/js/owl.carousel.js"></script>
+    <!-- lightbox.min.js dosyası bağlantı etiketi -->
+    <script src="~/user/js/lightbox.min.js"></script>
+    <script>
+        window.addEventListener('load', function () {
+            var images = document.querySelectorAll('.custom-img-js');
+
+            var maxHeight = 50;
+            images.forEach(function (image) {
+                if (image.height > maxHeight) {
+                    maxHeight = image.height;
+                }
+            });
+
+            images.forEach(function (image) {
+                image.style.height = maxHeight + 'px';
+            });
+        });
+    </script>
+}
+
+<!-- Best Directors Etiketi Başlangıç -->
+<section id="best-directors" class="container text-center my-5">
+    <div class="section-title fs-1">EN İYİ YÖNETMENLER</div>
+    <div class="border-bottom m-auto mb-4"></div>
+    <p class="lead">Sinema dünyasının en iyilerini bir araya getirerek izleyicilere unutulmaz performanslar sunuyor. Oyuncuların yetenekleri ve ustalıkları, bu platformu sinema tutkunlarının gözdesi haline getiriyor.</p>
+    <div id="owl-demo2" class="owl-carousel owl-theme">
+        @foreach (var item in Model.MostPopularActors)
+        {
+            <div class="item px-2">
+                <a href="/Person/Director/@item.Id"><img class="w-100 rounded-4" src="@item.Photo"></a>
+            </div>
+        }
+    </div>
+</section>
+<!-- Best Directors Etiketi Bitiş -->
+
+<!-- Comment Directors Etiketi Başlangıç -->
+<section id="comment-actors" class="container text-center my-5">
+    <div class="section-title fs-1">EN ÇOK YORUMLANAN YÖNETMENLER</div>
+    <div class="border-bottom m-auto mb-4"></div>
+    <p class="lead">Sinema dünyasının en iyilerini bir araya getirerek izleyicilere unutulmaz performanslar sunuyor. Oyuncuların yetenekleri ve ustalıkları, bu platformu sinema tutkunlarının gözdesi haline getiriyor.</p>
+    <div class="container rounded-4 mt-5">
+        <div class="row rounded-4 gap-5">
+            @foreach (var item in Model.MostCommentActors)
+            {
+                <div class="col-12">
+                    <div class="row rounded-4">
+                        <div class="col-12 col-md-12 col-lg-5 col-xxl-3 rounded-4 p-0">
+                            <img src="@item.Photo" class="rounded-4 w-100 h-100" alt="@item.Photo">
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-7 col-xxl-9">
+                            <h2 class="my-3">@item.FullName</h2>
+                            <div class="rating my-3">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= item.Points)
+                                    {
+                                        <span class="fa fa-star checked"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fa fa-star"></span>
+                                    }
+                                }
+                                <span class="text-danger fw-bold ms-1">@String.Format("{0:F2}", item.Points) Puan</span>
+                            </div>
+                            <p class="lead">@item.ShortDescription</p>
+                            <p class="lead">@item.Description</p>
+                            <div class="my-3">
+                                <a href="/Person/Director/@item.Id" class="btn btn-secondary">Profiline Git</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- Comment Directors Etiketi Bitiş -->
+
+<!-- Other Directors Etiketi Başlangıç -->
+<section id="other-actors" class="container text-center my-5">
+    <div class="section-title fs-1">DİĞER OYUNCULAR</div>
+    <div class="border-bottom m-auto mb-5"></div>
+    <div class="items row align-items-stretch">
+        @if (Model.Actors.MoviePersons != null)
+        {
+            var groupedPersons = Model.Actors.MoviePersons.GroupBy(mp => mp.PersonId);
+            foreach (var group in groupedPersons)
+            {
+                var person = group.First();
+                <div class="item col-12 col-lg-4 col-xl-3 mb-5 d-flex flex-column">
+                    <div class="item__image">
+                        <a href="@person.PersonPhoto" data-lightbox="roadtrip"><img src="@person.PersonPhoto" class="custom-img-js img-thumbnail rounded-4" alt="@person.PersonName"></a>
+                    </div>
+                    <div class="item__text my-3">
+                        <div class="item__text__wrap">
+                            <h2 class="item__text__title">
+                                <a href="/Person/Director/@person.PersonId" class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">@person.PersonName</a>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+<!-- Other Directors Etiketi Bitiş -->

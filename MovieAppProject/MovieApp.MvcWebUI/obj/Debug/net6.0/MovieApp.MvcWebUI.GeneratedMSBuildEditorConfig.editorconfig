@@ -1,0 +1,153 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = MovieApp.MvcWebUI
+build_property.RootNamespace = MovieApp.MvcWebUI
+build_property.ProjectDir = C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppProject\MovieApp.MvcWebUI\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Emirhan\Desktop\Emirhan CİNCİ - Ahlatcı Proje\MovieAppProject\MovieApp.MvcWebUI
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Authentication/LogIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQXV0aGVudGljYXRpb25cTG9nSW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Category/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2F0ZWdvcnlcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Contact/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ29udGFjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Country/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ291bnRyeVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Gender/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcR2VuZGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Movie/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTW92aWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/PersonType/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUGVyc29uVHlwZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Person/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUGVyc29uXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Shared/Components/Sidebar/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcU2lkZWJhclxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Shared/_Footer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9Gb290ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/Shared/_NavBar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXF9OYXZCYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Areas/Admin/Views/User/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Authentication/LogIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aGVudGljYXRpb25cTG9nSW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Category/Movies.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcTW92aWVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Contact/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGFjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Movie/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aWVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Movie/Movie.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aWVcTW92aWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Person/Actor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uXEFjdG9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Person/Actors.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uXEFjdG9ycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Person/Director.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uXERpcmVjdG9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Person/Directors.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyc29uXERpcmVjdG9ycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Profile/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/Components/Navbar/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcTmF2YmFyXERlZmF1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/Home/_About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEhvbWVcX0Fib3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/Home/_Features.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEhvbWVcX0ZlYXR1cmVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/Home/_Question.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEhvbWVcX1F1ZXN0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/Home/_Slider.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEhvbWVcX1NsaWRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/_Footer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Gb290ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/_Navbar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9OYXZiYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/_OtherLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9PdGhlckxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Emirhan/Desktop/Emirhan CİNCİ - Ahlatcı Proje/MovieAppProject/MovieApp.MvcWebUI/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-82k2z2cg1i

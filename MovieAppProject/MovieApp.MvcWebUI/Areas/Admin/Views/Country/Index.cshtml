@@ -1,0 +1,378 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items;
+@model List<CountryWithPersonsItem>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+
+    <script>
+        // Tablo için gerekli olan JS komutları
+        $(document).ready(function () {
+            // Tablo için gerekli JS komutları
+            $("#example1").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                order: [
+                    [2, 'desc']
+                ],
+                "columnDefs": [{
+                    "targets": 4,
+                    "orderable": false,
+                }],
+                "lengthChange": true,
+                "paging": true,
+                "searching": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Ülke eklemek için gerekli JS komutları
+            $("#btnAddCountry").click(function () 
+            {
+                if ($("#addCountryName").val().length != 0) 
+                {
+                    var formData = new FormData();
+                    var countryName = $("#addCountryName").val();
+                    formData.append("name", countryName);
+
+                    $.ajax({
+                        url: "/Admin/Country/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) 
+                            {
+                                Swal.fire({
+                                    title: 'İşlem başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                                var table = $('#example1').DataTable();
+                                var rowNode = table.row.add([response.countryId, response.countryName, 0, "<th><div class='progress progress-xs'><div class'progress-bar progress-bar-danger' style='width: 0%'></div></div><span class='badge bg-dark'>%0,00</span></th>", "İşlem yapmak için sayfayı güncelleyiniz."]).draw().node();
+                                $(rowNode).css('color', 'red').animate({ color: 'red' });
+                                $("btnAddCountryClear").trigger("click");
+                            } 
+                            else 
+                            {
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: 'Lütfen bir içerik giriniz.',
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+
+            // Ülke eklemek için gerekli JS komutları
+            $(".btnDeleteCountry").click(function(){
+                var countryId = $(this).attr("countryId");
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Silme işlemi geri alınamaz!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sil!',
+                    cancelButtonText: 'Vazgeç!'
+                }).then((result) => {
+                    if (result.isConfirmed) 
+                    {
+                        $.ajax({
+                            url: "/Admin/Country/Delete/" + countryId,
+                            method: "post",
+                            datatype: "json",
+                            success: function (response) {
+                                if (response.isSuccess) 
+                                {
+                                    Swal.fire({
+                                        title: 'İşlem Başarılı', 
+                                        text: response.message, 
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                    });
+                                    var table = $('#example1').DataTable();
+                                    table.row($("#tr-" + countryId)).remove().draw();
+                                }
+                                else 
+                                {
+                                    var errors = "";
+                                    for (var i = 0; i < response.errorMessages.length; i++) {
+                                        errors += response.errorMessages[i] + "<br />";
+                                    }
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: response.message + "<br />" + errors,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                        icon: 'error',
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else 
+                    {
+                        Swal.fire({
+                            title: 'İşlem İptal Edildi',
+                            icon: 'info',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                });
+            });
+
+            // Ülke güncellemek için gerekli JS komutları
+            $(".btnCountryUpdate").click(function(){
+                var countryId = $(this).attr("countryId");
+                var countryName = $(this).attr("countryName");
+
+                $("#exampleModalLabel").html(countryName + " Ülke Bilgisini Güncelleme Formu");
+                $("#spanCountryId").html(countryId);
+                $("#updateCountryId").val(countryId);
+                $("#updateCountryName").val(countryName);
+
+                $("#exampleModal").modal("show");
+
+                $("#btnUpdateCountry").click(function () {
+                    var updatedCountryId = $("#updateCountryId").val();
+                    var updatedCountryName = $("#updateCountryName").val();
+                    if (updatedCountryName.length > 0) {
+                        var formData = new FormData();
+                        formData.append("id", updatedCountryId);
+                        formData.append("name", updatedCountryName);
+                        $.ajax({
+                            url: "/Admin/Country/Update",
+                            method: "post",
+                            dataType: "json",
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    Swal.fire({
+                                        title: 'İşlem Başarılı',
+                                        text: response.message,
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                    $("#exampleModal").modal("hide");
+                                }
+                                else {
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'İşlem Başarısız',
+                            text: 'Lütfen bir içerik giriniz.',
+                            icon: 'error',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+<!-- Ülke Ekleme Alanı Başlangıç -->
+<div class="row">
+    <div class="col-12">
+        <div class="card p-3">
+            <h2>YENİ ÜLKE EKLE</h2>
+            <!-- Form Etiketi Başlangıç -->
+            <form id="addCountry">
+                <div class="form-group">
+                    <label for="addCountryName">Yeni Ülke Adı</label>
+                    <input type="text" name="addCountryName" id="addCountryName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <button type="reset" id="btnAddCountryClear" class="btn btn-danger">İçeriği Temizle</button>
+                    <button type="button" id="btnAddCountry" class="btn btn-warning mx-2">Ülkeyi Kaydet</button>
+                </div>
+            </form>
+            <!-- Form Etiketi Bitiş -->
+        </div>
+    </div>
+</div>
+<!-- Ülke Ekleme Alanı Bitiş -->
+
+<!-- Ülke Etiketi Başlangıç -->
+<div class="row">
+    <!-- Ülkeler Tablosu Etiketi Başlangıç  -->
+    <div class="col-12">
+        <div class="card">
+            <!-- Başlık Etiketi Başlangıç -->
+            <div class="card-header">
+                <h2>ÜLKELER</h2>
+            </div>
+            <!-- Başlık Etiketi Bitiş -->
+            <!-- Tablo Etiketi Başlangıç -->
+            <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ülke Id</th>
+                            <th>Ülke Adı</th>
+                            <th>Kayıtlı Kişi Sayısı</th>
+                            <th>Tüm Kayıtlı Kişilere Göre Yüzdelik</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var totalPersons = item.Persons.Count;
+                            var totalPersonCount = Model.Sum(prd => prd.Persons.Count);
+                            var percentage = totalPersonCount > 0 ? ((double)totalPersons / totalPersonCount) * 100 : 0;
+
+                            <tr id="tr-@item.Id">
+                                <th>@item.Id</th>
+                                <th>@item.Name</th>
+                                <th><span class="text-danger">@totalPersons</span></th>
+                                <th>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-danger" style="width: @percentage.ToString("0")%"></div>
+                                    </div>
+                                    <span class="badge bg-dark">@String.Format("%{0:F2}", percentage)</span>
+                                </th>
+                                <th>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#modal-primary-@item.Id">Kişileri Göster</button>
+                                        <div class="modal fade" id="modal-primary-@item.Id">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">@item.Name Ülkesine Kayıtlı Kişiler</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul>
+                                                            @foreach (var movie in item.Persons)
+                                                            {
+                                                                <li>@movie.FullName</li>
+                                                            }
+                                                            @if (item.Persons.Count == 0)
+                                                            {
+                                                                <li>Herhangi bir kişi kaydı bulunamadı.</li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="btn btn-warning btnCountryUpdate mx-2" countryId="@item.Id" countryName="@item.Name">Güncelle</button>
+
+                                        <button type="button" class="btn btn-danger btnDeleteCountry mx-2" countryId="@item.Id">Sil</button>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Ülke Id</th>
+                            <th>Ülke Adı</th>
+                            <th>Kayıtlı Kişi Sayısı</th>
+                            <th>Tüm Kayıtlı Kişilere Göre Yüzdelik</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Tablo Etiketi Bitiş -->
+        </div>
+    </div>
+    <!-- Ülkeler Tablosu Etiketi Bitiş -->
+</div>
+<!-- Ülke Etiketi Bitiş -->
+
+<!-- Ülke Güncelleme Etiketi Başlangıç -->
+<div class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Ülke Güncelle Formu</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="updateCountryId" />
+                    <div class="card-body">
+                        <p>Ülke Id: <b id="spanCountryId"></b></p>
+                        <div class="form-group">
+                            <label for="updateCountryName">Ülke Adı</label>
+                            <input type="text" class="form-control" id="updateCountryName" placeholder="Ülke adı giriniz.">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button id="btnClearEdit" type="reset" class="btn btn-danger">İçeriği Temizle</button>
+                        <button id="btnUpdateCountry" type="button" class="btn btn-warning mx-2">Güncelle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Ülke Güncelleme Etiketi Bitiş -->

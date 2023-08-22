@@ -1,0 +1,108 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items.Contact;
+@model List<ContactItem>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Tablo için gerekli JS komutları
+            $("#example1").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                order: [
+                    [0, 'desc']
+                ],
+                "columnDefs": [{
+                    "targets": 4,
+                    "orderable": false,
+                }],
+                "lengthChange": false,
+                "paging": false,
+                "searching": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+}
+
+<!-- Kategori Tablosu Etiketi Başlangıç -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <!-- Başlık Etiketi Başlangıç -->
+            <div class="card-header">
+                <h2>MESAJLAR</h2>
+            </div>
+            <!-- Başlık Etiketi Bitiş -->
+            <!-- Tablo Etiketi Başlangıç -->
+            <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Mesaj Id</th>
+                            <th>Adı Soyadı</th>
+                            <th>İletişim</th>
+                            <th>Konu ve Mesajı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableContent">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th>@item.Id</th>
+                                <th>@item.FullName</th>
+                                <th>
+                                    <div class="text-danger bg-dark px-2 mb-3">@item.Email</div>
+                                    <div class="text-primary bg-danger px-2">@item.Phone</div>
+                                </th>
+                                <th>
+                                    <div class="text-danger lead"><b>@item.Subject</b></div>
+                                    <div class="text-dark lead">@item.Message</div>
+                                </th>
+                                <th>
+                                    <a href="mailto:@item.Email" class="btn btnContact btn-primary">İletişime Geç</a>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Mesaj Id</th>
+                            <th>Adı Soyadı</th>
+                            <th>İletişim</th>
+                            <th>Konu ve Mesajı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Tablo Etiketi Bitiş -->
+        </div>
+    </div>
+</div>
+<!-- Kategori Tablosu Etiketi Bitiş -->

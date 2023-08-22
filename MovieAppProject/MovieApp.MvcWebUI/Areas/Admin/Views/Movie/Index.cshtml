@@ -1,0 +1,684 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.ViewModels;
+@model MovieIndexViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Tablo için gerekli JS komutları
+            $("#example1").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                order: [
+                    [0, 'asc']
+                ],
+                "columnDefs": [{
+                    "targets": 4,
+                    "orderable": false,
+                }],
+                "lengthChange": false,
+                "paging": false,
+                "searching": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Film eklemek için gerekli JS komutları
+            $("#btnAddMovie").click(function () {
+                var file = $("#photo").get(0).files[0];
+                var movieName = $("#movieName").val();
+                var categoryId = $('#categoryId').val();
+                var duration = $('#duration').val();
+                var date = $('#date').val();
+                var shortDescription = $('#shortDescription').val();
+                var description = $('#description').val();
+                var url = $('#trailer').val();
+                if (movieName.length != 0 && categoryId != 0 && duration != 0 && date != null && shortDescription.length != 0 && description.length != 0 && url.length != 0) {
+                    var formData = new FormData();
+                    formData.append("name", movieName);
+                    formData.append("categoryId", categoryId);
+                    formData.append("duration", duration);
+                    formData.append("releaseDate", date);
+                    formData.append("shortDescription", shortDescription);
+                    formData.append("description", description);
+                    formData.append("moviePhoto", file);
+                    formData.append("trailer", url);
+
+                    $.ajax({
+                        url: "/Admin/Movie/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                })
+                                var table = $('#example1').DataTable();
+                                var rowNode = table.row.add([response.id, response.name, response.categoryName, "0 Değerlendirme / 0,00 Puan", "İşlem yapmak için sayfayı güncelleyiniz."]).draw().node();
+                                $(rowNode).css('color', 'red').animate({ color: 'red' });
+                                $("#btnClearAddMovie").trigger("click");
+                            }
+                            else {
+                                $("#divMessages").html(content);
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: 'Lütfen bir içerik giriniz.',
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+
+            // Film silmek için gerekli JS komutları
+            $(".btnDeleteMovie").click(function () {
+                var movieId = $(this).attr("deleteMovieId");
+
+                Swal.fire({
+                    title: 'Silme işlemi geri alınamaz!',
+                    text: "Film Id'si " + movieId + " olan filmi silmek istiyor musunuz?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sil!',
+                    cancelButtonText: 'Vazgeç!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/Admin/Movie/Delete/" + movieId,
+                            method: "post",
+                            datatype: "json",
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    Swal.fire({
+                                        title: 'İşlem Başarılı',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                    });
+                                    var table = $('#example1').DataTable();
+                                    table.row($("#tr-" + movieId)).remove().draw();
+                                }
+                                else {
+                                    var errors = "";
+                                    for (var i = 0; i < response.errorMessages.length; i++) {
+                                        errors += response.errorMessages[i] + "<br />";
+                                    }
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: response.message + "<br />" + errors,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                        icon: 'error',
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'İşlem İptal Edildi',
+                            icon: 'info',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                })
+            });
+
+            // Film güncellemek için gerekli JS komutları
+            $(".btnUpdate").click(function () {
+                var id = $(this).attr("movieId");
+                var categoryId = $(this).attr("categoryId");
+                $.ajax({
+                    url: "/Admin/Movie/GetMovie/" + id,
+                    method: "get",
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function(response){
+                        if(response.isSuccess)
+                        {
+                            $("#exampleModalLabel").html(response.name + " Filmini Güncelleme Formu");
+                            $("#spanMovieId").html(response.id);
+                            $("#updateMovieName").val(response.name);
+                            $("#updateCategoryId").val(categoryId);
+                            $("#updateDuration").val(response.duration);
+                            $("#updateReleaseDate").val(response.releaseDate);
+                            $("#updateShortDescription").val(response.shortDescription);
+                            $("#updateDescription").val(response.description);
+                            $("#updateTrailer").val(response.trailer);
+                            $("#exampleModal").modal("show");
+
+                            $("#btnUpdateMovie").click(function () {
+                                var name = $("#updateMovieName").val();
+                                var catId = $("#updateCategoryId").val();
+                                var duration = $("#updateDuration").val();
+                                var date = $("#updateReleaseDate").val();
+                                var shortDescription = $("#updateShortDescription").val();
+                                var description = $("#updateDescription").val();
+                                var file = $("#updatePhoto").get(0).files[0];
+                                var trailer = $("#updateTrailer").val();
+
+                                if (name.length > 0 && duration > 0 && categoryId > 0 && id > 0 && shortDescription.length > 0 && description.length > 0 && trailer.length > 0) {
+                                    var formData = new FormData();
+                                    formData.append("id", id);
+                                    formData.append("name", name);
+                                    formData.append("categoryId", catId);
+                                    formData.append("duration", duration);
+                                    formData.append("releaseDate", date);
+                                    formData.append("shortDescription", shortDescription);
+                                    formData.append("description", description);
+                                    formData.append("moviePhoto", file);
+                                    formData.append("trailer", trailer);
+
+                                    $.ajax({
+                                        url: "/Admin/Movie/Update",
+                                        method: "post",
+                                        dataType: "json",
+                                        contentType: false,
+                                        processData: false,
+                                        data: formData,
+                                        success: function(response){
+                                            if (response.isSuccess) {
+                                                Swal.fire({
+                                                    title: 'İşlem Başarılı',
+                                                    text: response.message,
+                                                    icon: 'success',
+                                                    showCancelButton: false,
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Tamam'
+                                                })
+                                                $("#btnAddCountryClear").trigger("click");
+                                            }
+                                            else {
+                                                Swal.fire({
+                                                    title: 'İşlem Başarısız',
+                                                    text: response.message,
+                                                    icon: 'error',
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Tamam'
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: "Lütfen eksiksikz bir şekilde alanları doldurunuz.",
+                                        icon: 'error',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Swal.fire({
+                                title: 'İşlem Başarısız',
+                                text: "Bir hata meydana geldi. Lütfen daha sonra deneyiniz.",
+                                icon: 'error',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Tamam'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // MoviePersons ekleyen JS komutları
+            $("#btnAddMp").click(function(){
+                var movieId = $("#mpMovieId").val();
+                var personId = $("#mpPersonId").val();
+                var personTypeId = $("#mpPersonTypeId").val();
+
+                if(movieId > 0 && personId > 0 && personTypeId > 0)
+                {
+                    var formData = new FormData();
+                    formData.append("movieId", movieId);
+                    formData.append("personId", personId);
+                    formData.append("personTypeId", personTypeId);
+
+                    $.ajax({
+                        url: "/Admin/MoviePerson/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response){
+                            if(response.isSuccess)
+                            {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                            else{
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: "Lütfen eksiksikz bir şekilde alanları doldurunuz.",
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+
+            // MoviePersons silen JS komutları
+            $("#btnDeleteMp").click(function(){
+                var movieId = $("#mpMovieId").val();
+                var personId = $("#mpPersonId").val();
+                var personTypeId = $("#mpPersonTypeId").val();
+                if (movieId > 0 && personId > 0 && personTypeId > 0) {
+                    var formData = new FormData();
+                    formData.append("movieId", movieId);
+                    formData.append("personId", personId);
+                    formData.append("personTypeId", personTypeId);
+
+                    $.ajax({
+                        url: "/Admin/MoviePerson/Delete",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: "Lütfen eksiksikz bir şekilde alanları doldurunuz.",
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+<!-- Film Ekle Etiketi Başlangıç -->
+<div class="card card-primary">
+    <!-- Form etiketi başlık etiketi başlangıç -->
+    <div class="card-header">
+        <h3 class="card-title">Yeni Film Ekle</h3>
+    </div>
+    <!-- Form etiketi başlık etiketi bitiş -->
+
+    <!-- Form etiketi başlangıç-->
+    <form>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="movieName">Film Adı</label>
+                <input type="text" class="form-control" id="movieName" placeholder="Lütfen bir film adı giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="categoryId">Kategori Adı</label>
+                <select name="categoryId" id="categoryId" class="form-control">
+                    <option value="-1" selected disabled>Lütfen bir kategori seçiniz...</option>
+                    @foreach (var item in Model.CategoryList)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="duration">Süre</label>
+                <input type="number" min="0" class="form-control" id="duration" placeholder="Lütfen süreyi giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="date">Tarih</label>
+                <input type="date" class="form-control" id="date" placeholder="Lütfen bir tarih giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="shortDescription">Kısa Açıklama</label>
+                <textarea type="password" class="form-control" id="shortDescription" placeholder="Lütfen kısa bir açıklama giriniz." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="description">Açıklama</label>
+                <textarea type="password" class="form-control" id="description" placeholder="Lütfen kısa bir açıklama giriniz." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="photo">Fotoğraf Dosyası</label>
+                <div class="input-group">
+                    <input type="file" class="custom-file-input" id="photo" placeholder="Lütfen bir resim dosyası giriniz." required>
+                    <label class="custom-file-label" for="photo">Dosya Seçiniz</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="trailer">Fragman Adresi</label>
+                <input type="url" class="form-control" id="trailer" placeholder="Lütfen bir fragman url'si giriniz." required>
+            </div>
+        </div>
+        <div class="card-footer d-flex">
+            <button type="reset" id="btnClearAddMovie" class="btn btn-danger">Form İçeriğini Temizle</button>
+            <button type="button" id="btnAddMovie" class="btn btn-warning mx-2">Yeni Bir Film Ekle</button>
+        </div>
+    </form>
+    <!-- Form etiketi bitiş -->
+</div>
+<!-- Film Ekle Etiketi Bitiş -->
+
+<hr/>
+
+<!-- Filmlere Oyuncu veya Yönetmen Ekle Etiketi Başlangıç -->
+<div class="card card-success">
+    <!-- Form etiketi başlık etiketi başlangıç -->
+    <div class="card-header">
+        <h3 class="card-title">Filme Oyuncu veya Yönetmen Ekle</h3>
+    </div>
+    <!-- Form etiketi başlık etiketi bitiş -->
+    <!-- Form etiketi başlangıç-->
+    <form>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="mpMovieId">Film Adı</label>
+                <select id="mpMovieId" class="form-control">
+                    <option selected disabled value="-1">Lütfen bir film seçiniz.</option>
+                    @foreach (var item in Model.MovieList)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mpPersonId">Kişi Adı</label>
+                <select id="mpPersonId" class="form-control">
+                    <option selected disabled value="-1">Lütfen bir kişi seçiniz.</option>
+                    @foreach (var item in Model.PersonItems)
+                    {
+                        <option value="@item.Id">@item.FullName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mpPersonTypeId">Rol</label>
+                <select id="mpPersonTypeId" class="form-control">
+                    <option selected disabled value="-1">Lütfen bir rol seçiniz.</option>
+                    @foreach (var item in Model.PersonTypeList)
+                    {
+                        <option value="@item.Id">@item.Type</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="card-footer d-flex">
+            <button type="reset" id="btnDeleteMp" class="btn btn-danger">Sil</button>
+            <button type="button" id="btnAddMp" class="btn btn-warning mx-2">Ekle</button>
+        </div>
+    </form>
+    <!-- Form etiketi bitiş -->
+</div>
+<!-- Filmlere Oyuncu veya Yönetmen Ekle Etiketi Bitiş -->
+
+<hr />
+
+<!-- Film Tablosu Etiketi Başlangıç -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <!-- Başlık Etiketi Başlangıç -->
+            <div class="card-header">
+                <h2>FİLMLER</h2>
+            </div>
+            <!-- Başlık Etiketi Bitiş -->
+
+            <!-- Tablo Etiketi Başlangıç -->
+            <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Film Id</th>
+                            <th>Film Adı</th>
+                            <th>Kategori Adı</th>
+                            <th>Değerlendirmesi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableContent">
+                        @foreach (var item in Model.MovieList)
+                        {
+                            <tr id="tr-@item.Id">
+                                <th>@item.Id</th>
+                                <th>@item.Name</th>
+                                <th>@item.CategoryName</th>
+                                <th>
+                                    <div><b class="text-danger">@item.MovieRatings.Count</b> Değerlendirme</div>
+                                    @if (item.Points != null)
+                                    {
+                                        <span class="badge badge-dark text-white">@String.Format("{0:F2}", item.Points) Puan</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-dark text-white">0,00 Puan</span>
+                                    }
+                                </th>
+                                <th>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#modal-primary-@item.Id">Oyuncu ve Yönetmenleri Göster</button>
+                                        <div class="modal fade" id="modal-primary-@item.Id">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">@item.Name Filmindeki Önemli Kişiler</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Adı ve Soyadı</th>
+                                                                    <th>Rolü</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var person in item.MoviePersons)
+                                                                {
+                                                                    <tr>
+                                                                        <th>@person.PersonName</th>
+                                                                        <th>@person.PersonTypeName</th>
+                                                                    </tr>
+                                                                }
+                                                                @if (item.MoviePersons.Count == 0)
+                                                                {
+                                                                    <li>Herhangi bir kişi kaydı bulunamadı.</li>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @{
+                                            var categoryId = 0;
+                                            foreach (var category in Model.CategoryList)
+                                            {
+                                                if (item.CategoryName == category.Name)
+                                                {
+                                                    categoryId = category.Id;
+                                                }
+                                            }
+                                        }
+                                        <button type="button" class="btn btn-warning btnUpdate mx-2" movieId="@item.Id" categoryId="@categoryId">Güncelle</button>
+
+                                        <button type="button" class="btn btn-danger btnDeleteMovie mx-2" deleteMovieId="@item.Id">Sil</button>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Film Id</th>
+                            <th>Film Adı</th>
+                            <th>Kategori Adı</th>
+                            <th>Değerlendirmesi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Tablo Etiketi Bitiş -->
+        </div>
+    </div>
+</div>
+<!-- Film Tablosu Etiketi Bitiş -->
+
+<!-- Film Güncelleme Etiketi Başlangıç -->
+<div class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Film Güncelleme Formu</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="updateMovieId" />
+                    <div class="card-body">
+                        <p>Film Id: <b id="spanMovieId"></b></p>
+                        <div class="form-group">
+                            <label for="updateMovieName">Film Adı</label>
+                            <input type="text" id="updateMovieName" class="form-control" placeholder="Lütfen bir film adı giriniz."/>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateCategoryId">Kategori Adı</label>
+                            <select id="updateCategoryId" class="form-control">
+                                <option disabled>Lütfen bir kategori seçiniz.</option>
+                                @foreach (var item in Model.CategoryList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateDuration">Film Süresi</label>
+                            <input type="number" id="updateDuration" class="form-control" placeholder="Lütfen film süresini giriniz." />
+                        </div>
+                        <div class="form-group">
+                            <label for="updateReleaseDate">Film Yayın Tarihi</label>
+                            <input type="date" id="updateReleaseDate" class="form-control" placeholder="Lütfen film yayın tarihini giriniz." required />
+                        </div>
+                        <div class="form-group">
+                            <label for="updateShortDescription">Film Kısa Açıklaması</label>
+                            <textarea type="date" id="updateShortDescription" class="form-control" placeholder="Lütfen kısa bir film açıklaması giriniz."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateDescription">Film Açıklaması</label>
+                            <textarea type="date" id="updateDescription" class="form-control" placeholder="Lütfen bir film açıklaması giriniz."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="updatePhoto">Fotoğraf Dosyası</label>
+                            <div class="input-group">
+                                <input type="file" class="custom-file-input" id="updatePhoto" placeholder="Lütfen bir resim dosyası giriniz." required>
+                                <label class="custom-file-label" for="updatePhoto">Dosya Seçiniz</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="updateTrailer">Fragman Adresi</label>
+                            <input type="url" class="form-control" id="updateTrailer" placeholder="Lütfen bir fragman url'si giriniz." required>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button id="btnClearEdit" type="reset" class="btn btn-danger">İçeriği Temizle</button>
+                        <button id="btnUpdateMovie" type="button" class="btn btn-warning mx-2">Güncelle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Film Güncelleme Etiketi Bitiş -->

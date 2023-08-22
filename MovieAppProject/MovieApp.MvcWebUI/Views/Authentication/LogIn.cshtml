@@ -1,0 +1,175 @@
+﻿@{
+    Layout = "~/Views/Shared/_OtherLayout.cshtml";
+}
+
+@section customStyles {
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts {
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Kullanıcı eklemek için gerekli JS komutları
+            $("#btnAddUser").click(function () {
+                var nickname = $("#nickname").val();
+                var firstname = $("#name").val();
+                var lastname = $("#surname").val();
+                var email = $("#email").val();
+                var password1 = $("#password1").val();
+                var password2 = $("#password2").val();
+
+                if (nickname.length != 0 && firstname.length != 0 && lastname.length != 0 && email.length != 0 && password1.length != 0 && password2.leght != 0) {
+                    if (password1 == password2) {
+                        var formData = new FormData();
+
+                        formData.append("nickname", nickname);
+                        formData.append("firstname", firstname);
+                        formData.append("lastname", lastname);
+                        formData.append("email", email);
+                        formData.append("password", password1);
+
+                        $.ajax({
+                            url: "/Authentication/Save",
+                            method: "post",
+                            dataType: "json",
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    Swal.fire({
+                                        title: 'İşlem Başarılı',
+                                        text: response.message,
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                    $("#btnClearAddUser").trigger("click");
+                                }
+                                else {
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'İşlem Başarısız',
+                            text: "Girmiş olduğunuz şifreler aynı değil.",
+                            icon: 'error',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: "Lütfen form alanlarını eksiksiz doldurunuz.",
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+
+            $("#btnLogIn").click(function () {
+
+                var formDataObject =
+                {
+                    UserName: $("#txtUserName").val(),
+                    Password: $("#txtPassword").val()
+                };
+
+                $.ajax({
+                    url: "/Authentication/LogIn",
+                    method: "post",
+                    dataType: "json",
+                    data: { dto: formDataObject },
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            window.location.href = "/Profile/Index";
+                        }
+                        else {
+                            Swal.fire({
+                                title: 'İşlem Başarısız',
+                                text: "Lütfen bilgilerinizi tekrar kontrol ediniz.",
+                                icon: 'error',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Tamam'
+                            });
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+}
+
+<h4 class="section-title text-center fs-1 mt-5">GİRİŞ YAP</h4>
+<div class="border-bottom m-auto my-3 rounded-5"></div>
+
+<!-- Giriş ekranı etiketi başlangıç -->
+<div class="container">
+    <form class="row g-3">
+        <div class="col-md-6">
+            <label for="txtUserName" class="form-label">Kullanıcı Adı</label>
+            <input type="text" class="form-control" id="txtUserName" placeholder="Kullanıcı adınızı giriniz.">
+        </div>
+        <div class="col-md-6">
+            <label for="txtPassword" class="form-label">Şifre</label>
+            <input type="password" class="form-control" id="txtPassword" placeholder="Şifrenizi giriniz.">
+        </div>
+        <div class="col-12">
+            <button type="button" id="btnLogIn" class="btn btn-warning">Giriş Yap</button>
+        </div>
+    </form>
+</div>
+<!-- Giriş ekranı etiketi bitiş -->
+
+<h4 class="section-title text-center fs-1 mt-5">HESAP OLUŞTUR</h4>
+<div class="border-bottom m-auto my-3 rounded-5"></div>
+
+<!-- Hesap oluşturma etiketi başlangıç  -->
+<div class="container">
+    <form class="row g-3">
+        <div class="col-md-6">
+            <label for="name" class="form-label">İsim</label>
+            <input type="text" class="form-control" id="name" placeholder="İsminizi giriniz.">
+        </div>
+        <div class="col-md-6">
+            <label for="surname" class="form-label">Soyisim</label>
+            <input type="text" class="form-control" id="surname" placeholder="Soyisminizi giriniz.">
+        </div>
+        <div class="col-12">
+            <label for="email" class="form-label">E-Mail</label>
+            <input type="email" class="form-control" id="email" placeholder="ornek@mail.com">
+        </div>
+        <div class="col-12">
+            <label for="nickname" class="form-label">Kullanıcı Adı</label>
+            <input type="text" class="form-control" id="nickname" placeholder="Bir kullanıcı adı giriniz.">
+        </div>
+        <div class="col-md-6">
+            <label for="password1" class="form-label">Şifre</label>
+            <input type="password" class="form-control" id="password1">
+        </div>
+        <div class="col-md-6">
+            <label for="password2" class="form-label">Tekrar Şifre</label>
+            <input type="password" class="form-control" id="password2">
+        </div>
+        <div class="col-12">
+            <button type="reset" id="btnClearAddUser" class="btn btn-danger">İçeriği Temizle</button>
+            <button type="button" id="btnAddUser" class="btn btn-warning">Kaydı Tamamla</button>
+        </div>
+    </form>
+</div>
+<!-- Hesap oluşturma etiketi bitiş -->

@@ -1,0 +1,124 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items;
+@model AdminUserItem
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+        <img src="~/admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light"><b>CNC Film Yönetimi</b></span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="~/admin/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">@Model.FullName</a>
+            </div>
+        </div>
+
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Ara" aria-label="Search">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        <i class="fas fa-search fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">YÖNETİCİ MENÜSÜ</li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>Film İçerikleri <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/Category/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Kategoriler</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Movie/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Filmler</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Person/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Oyuncular ve Yönetmenler</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>Kullanıcı İçerikleri <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/User/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Kullanıcılar</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>İletişim <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/Contact/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Gelen Mesajlar</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>Diğer Araç ve Gereçler <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/Admin/Country/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Ülkeler</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/Gender/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cinsiyet</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Admin/PersonType/Index" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Film Kişilik Tipleri</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

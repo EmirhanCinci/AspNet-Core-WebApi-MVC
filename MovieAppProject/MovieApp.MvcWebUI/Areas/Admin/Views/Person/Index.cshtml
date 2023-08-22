@@ -1,0 +1,644 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.ViewModels;
+@model AdminPersonViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/chart.js/Chart.min.js"></script>
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Tablo için gerekli JS komutları
+            $("#example1").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                order: [
+                    [0, 'asc']
+                ],
+                "columnDefs": [{
+                    "targets": 4,
+                    "orderable": false,
+                }],
+                "lengthChange": false,
+                "paging": false,
+                "searching": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Yorumları yönetmek için gerekli olan JS komutları
+            $(".btnShowComments").click(function(){
+                var personId = $(this).attr("personId");
+                $.ajax({
+                    url: "/Admin/Comment/GetPersonRatings/" + personId,
+                    method: "get",
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response){
+                        if(response.isSuccess){
+                            if(response.data != null)
+                            {
+                                $("#exampleModalLabel").html(response.data[0].personName + " Kişisine Yapılmış Yorumlar");
+                                for (var i = 0; i < response.data.length; i++) {
+                                    var content = "<tr id='comment-"+ response.data[i].id + "'><th>" + response.data[i].userName + "</th><th>" + response.data[i].comment + "</th><th>" + response.data[i].point + "</th><th><button class='btn btnDeleteComment btn-danger' commentId='" + response.data[i].id + "'>Sil</button></th></tr>";
+                                    $("#comments").append(content);
+                                }
+
+                                $("#exampleModal").modal("show");
+
+                                $(".btnDeleteComment").click(function(){
+                                    var commentId = $(this).attr("commentId");
+                                    $.ajax({
+                                        url: "/Admin/Comment/DeletePersonComment/" + commentId,
+                                        method: "post",
+                                        dataType: "json",
+                                        success: function (res){
+                                            if(res.isSuccess)
+                                            {
+                                                Swal.fire({
+                                                    title: 'İşlem Başarılı',
+                                                    text: res.message,
+                                                    icon: 'success',
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Tamam',
+                                                });
+                                                $("#comment-" + commentId).remove();
+                                            }
+                                            else{
+                                                var errors = "";
+                                                for (var i = 0; i < res.errorMessages.length; i++) {
+                                                    errors += res.errorMessages[i] + "<br />";
+                                                }
+                                                Swal.fire({
+                                                    title: 'İşlem Başarısız',
+                                                    text: res.message + "<br />" + errors,
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Tamam',
+                                                    icon: 'error',
+                                                });
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                            else{
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: 'Henüz herhangi bir yorum yapılmamış.',
+                                    icon: 'warning',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Kişileri güncellemek için gerekli olan JS komutları
+            $(".btnUpdatePerson").click(function () {
+                var id = $(this).attr("personId");
+                var countryId = $(this).attr("countryId");
+                var genderId = $(this).attr("genderId");
+
+                $.ajax({
+                    url: "/Admin/Person/GetPerson/" + id,
+                    method: "get",
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            $("#updateModalLabel").html(response.fullName + " Kişisini Güncelleme Formu");
+                            $("#updatePersonId").val(response.id);
+                            $("#spanPersonId").html(response.id);
+                            var nameParts = response.fullName.split(" ");
+                            var uptFirstName = nameParts[0];
+                            var uptLastName = nameParts[1];
+                            $("#updateFirstname").val(uptFirstName);
+                            $("#updateLastname").val(uptLastName);
+                            $("#updateCountry").val(countryId);
+                            $("#updateGender").val(genderId);
+                            $("#updateShortDescription").val(response.shortDescription);
+                            $("#updateDescription").val(response.description);
+                            $("#updateModal").modal("show");
+
+                            $("#btnUpdate").click(function () {
+                                var firstName = $("#updateFirstname").val();
+                                var lastName = $("#updateLastname").val();
+                                var birthDate = $("#updateBirthdate").val();
+                                var coId = $("#updateCountry").val();
+                                var geId = $("#updateGender").val();
+                                var shortDescription = $("#updateShortDescription").val();
+                                var file = $("#updatePhoto").get(0).files[0];
+                                var description = $("#updateDescription").val();
+
+                                if (firstName.length > 0 && lastName.length > 0 && coId > 0 && geId > 0 && shortDescription.length > 0 && description.length > 0) {
+                                    var formData = new FormData();
+                                    formData.append("id", id);
+                                    formData.append("firstName", firstName);
+                                    formData.append("lastName", lastName);
+                                    formData.append("birthDate", birthDate);
+                                    formData.append("countryId", coId);
+                                    formData.append("genderId", geId);
+                                    formData.append("shortDescription", shortDescription);
+                                    formData.append("description", description);
+                                    formData.append("photo", file);
+
+                                    $.ajax({
+                                        url: "/Admin/Person/Update",
+                                        method: "post",
+                                        dataType: "json",
+                                        contentType: false,
+                                        processData: false,
+                                        data: formData,
+                                        success: function (res) {
+                                            if (res.isSuccess) {
+                                                Swal.fire({
+                                                    title: 'İşlem Başarılı',
+                                                    text: res.message,
+                                                    icon: 'success',
+                                                    showCancelButton: false,
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Tamam'
+                                                });
+                                            }
+                                            else {
+                                                Swal.fire({
+                                                    title: 'İşlem Başarısız',
+                                                    text: res.message,
+                                                    icon: 'error',
+                                                    confirmButtonColor: '#3085d6',
+                                                    confirmButtonText: 'Tamam'
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                                else {
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: "Lütfen form alanlarını eksiksiz bir şekilde doldurunuz.",
+                                        icon: 'error',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                title: 'İşlem Başarısız',
+                                text: "Bir hata meydana geldi. Lütfen daha sonra deneyiniz.",
+                                icon: 'error',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'Tamam'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Kişileri silmek için gerekli olan JS komutları
+            $(".btnDeletePerson").click(function () {
+                var personId = $(this).attr("personId");
+
+                Swal.fire({
+                    title: 'Silme işlemi geri alınamaz!',
+                    text: "Kişi Id'si " + personId + " olan kişiyi silmek istiyor musunuz?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sil!',
+                    cancelButtonText: 'Vazgeç!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/Admin/Person/Delete/" + personId,
+                            method: "post",
+                            datatype: "json",
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    Swal.fire({
+                                        title: 'İşlem Başarılı',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                    });
+                                    var table = $('#example1').DataTable();
+                                    table.row($("#tr-" + personId)).remove().draw();
+                                }
+                                else {
+                                    var errors = "";
+                                    for (var i = 0; i < response.errorMessages.length; i++) {
+                                        errors += response.errorMessages[i] + "<br />";
+                                    }
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: response.message + "<br />" + errors,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                        icon: 'error',
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'İşlem İptal Edildi',
+                            icon: 'info',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                });
+            });
+
+            // Kişileri eklemek için gerekli olan JS komutları
+            $("#btnAddPerson").click(function(){
+                var file = $("#photo").get(0).files[0];
+                var firstName = $("#addFirstname").val();
+                var lastName = $('#addLastname').val();
+                var birthDate = $('#birthDate').val();
+                var countryId = $('#addCountry').val();
+                var genderId = $('#addGender').val();
+                var shortDescription = $('#addShortDescription').val();
+                var description = $('#addDescription').val();
+
+                if (firstName.length > 0 && lastName.length > 0 && countryId > 0 && genderId > 0 && shortDescription.length > 0 && description.length > 0) {
+                    var formData = new FormData();
+                    formData.append("firstName", firstName);
+                    formData.append("lastName", lastName);
+                    formData.append("birthDate", birthDate);
+                    formData.append("countryId", countryId);
+                    formData.append("genderId", genderId);
+                    formData.append("shortDescription", shortDescription);
+                    formData.append("description", description);
+                    formData.append("photo", file);
+
+                    $.ajax({
+                        url: "/Admin/Person/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                })
+                                var table = $('#example1').DataTable();
+                                var rowNode = table.row.add([response.id, response.fullName, "<div class='text-dark'>" + response.countryName + " & " + response.genderName + "</div>", "<div class='text-white badge bg-danger'>0 Yorum</div><div class='text-white badge bg-primary'>0 Film</div>", "İşlem yapmak için sayfayı güncelleyiniz."]).draw().node();
+                                $(rowNode).css('color', 'red').animate({ color: 'red' });
+                                $("#btnAddPersonClear").trigger("click");
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: 'Lütfen form alanlarını eksiksiz bir şekilde doldurunuz.',
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+<!-- Kişi Ekleme Alanı Başlangıç -->
+<div class="row">
+    <div class="col-12">
+        <div class="card p-3">
+            <h2>YENİ KİŞİ EKLE</h2>
+            <!-- Form Etiketi Başlangıç -->
+            <form id="addPerson">
+                <div class="form-group">
+                    <label for="addFirstname">Adı</label>
+                    <input type="text" id="addFirstname" name="addFirstname" class="form-control" placeholder="Lütfen bir isim giriniz." />
+                </div>
+                <div class="form-group">
+                    <label for="addLastname">Soyadı</label>
+                    <input type="text" id="addLastname" name="addLastname" class="form-control" placeholder="Lütfen bir soyisim giriniz." />
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">Doğum Tarihi</label>
+                    <input type="date" id="birthDate" name="birthDate" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label for="addCountry">Ülke</label>
+                    <select id="addCountry" class="form-control">
+                        <option selected disabled value="-1">Lütfen bir ülke seçiniz.</option>
+                        @foreach (var item in Model.CountryItems)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addGender">Cinsiyet</label>
+                    <select id="addGender" class="form-control">
+                        <option selected disabled value="-1">Lütfen bir cinsiyet seçiniz.</option>
+                        @foreach (var item in Model.GenderItems)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addShortDescription">Kısa Açıklama</label>
+                    <textarea id="addShortDescription" class="form-control" placeholder="Lütfen kısa bir açıklama giriniz."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="addDescription">Açıklama</label>
+                    <textarea id="addDescription" class="form-control" placeholder="Lütfen bir açıklama giriniz."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="photo">Fotoğraf Dosyası</label>
+                    <div class="input-group">
+                        <input type="file" class="custom-file-input" id="photo" placeholder="Lütfen bir resim dosyası giriniz." required>
+                        <label class="custom-file-label" for="photo">Dosya Seçiniz</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="reset" id="btnAddPersonClear" class="btn btn-danger">İçeriği Temizle</button>
+                    <button type="button" id="btnAddPerson" class="btn btn-warning mx-2">Kişiyi Kaydet</button>
+                </div>
+            </form>
+            <!-- Form Etiketi Bitiş -->
+        </div>
+    </div>
+</div>
+<!-- Kişi Ekleme Alanı Bitiş -->
+
+<hr />
+
+<!-- Kişi Tablosu Etiketi Başlangıç -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <!-- Başlık Etiketi Başlangıç -->
+            <div class="card-header">
+                <h2>OYUNCULAR VE YÖNETMENLER</h2>
+            </div>
+            <!-- Başlık Etiketi Bitiş -->
+            <!-- Tablo Etiketi Başlangıç -->
+            <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Adı Soyadı</th>
+                            <th>Ek Bilgi</th>
+                            <th>İstatistikleri</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableContent">
+                        @foreach (var item in Model.PersonItems)
+                        {
+                            <tr id="tr-@item.Id">
+                                <th>@item.Id</th>
+                                <th>@item.FullName</th>
+                                <th>
+                                    <div class="text-dark">@item.CountryName & @item.GenderName</div>
+                                    @if (item.MoviePersons != null && item.MoviePersons.Count > 0)
+                                    {
+                                        var groupedPersons = item.MoviePersons.GroupBy(mp => mp.PersonId);
+                                        foreach (var group in groupedPersons)
+                                        {
+                                            var actor = group.FirstOrDefault(mp => mp.PersonTypeName == "Oyuncu");
+                                            if (actor != null)
+                                            {
+                                                <div class="text-white badge bg-warning">@actor.PersonTypeName</div>
+                                            }
+                                            var director = group.FirstOrDefault(mp => mp.PersonTypeName == "Yönetmen");
+                                            if (director != null)
+                                            {
+                                                <div class="text-white badge bg-danger">@director.PersonTypeName</div>
+                                            }
+                                        }
+                                    }
+                                </th>
+                                <th>
+                                    <div class="text-white badge bg-danger">@item.PersonRatings.Count Yorum</div>
+                                    <div class="text-white badge bg-primary">@item.MoviePersons.Count Film</div>
+                                </th>
+                                <th>
+                                    <div>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary-@item.Id">Filmleri Listele</button>
+                                        <div class="modal fade" id="modal-primary-@item.Id">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">@item.FullName Kişinin Yer Aldığı Filmler</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <ul>
+                                                            @if (item.MoviePersons != null && item.MoviePersons.Count > 0)
+                                                            {
+                                                                var groupedPersons = item.MoviePersons.GroupBy(mp => mp.MovieId);
+                                                                foreach (var group in groupedPersons)
+                                                                {
+                                                                    var movie = group.First();
+                                                                    <li>@movie.MovieName</li>
+                                                                }
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="button" class="btn btnShowComments btn-info" personId="@item.Id">Yorumları Göster</button>
+                                        @{
+                                            var countryId = 0;
+                                            foreach (var country in Model.CountryItems)
+                                            {
+                                                if (item.CountryName == country.Name)
+                                                {
+                                                    countryId = country.Id;
+                                                }
+                                            }
+                                            var genderId = 0;
+                                            foreach (var gender in Model.GenderItems)
+                                            {
+                                                if (item.GenderName == gender.Name)
+                                                {
+                                                    genderId = gender.Id;
+                                                }
+                                            }
+                                        }
+                                        <button type="button" class="btn btnUpdatePerson btn-warning" personId="@item.Id" countryId="@countryId" genderId="@genderId">Güncelle</button>
+                                        <button type="button" class="btn btnDeletePerson btn-danger" personId="@item.Id">Sil</button>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Id</th>
+                            <th>Adı Soyadı</th>
+                            <th>Ek Bilgi</th>
+                            <th>İstatistikleri</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Tablo Etiketi Bitiş -->
+        </div>
+    </div>
+</div>
+<!-- Kişi Tablosu Etiketi Bitiş -->
+
+<!-- Kişi Yorumlarını Gösterme Etiketi Başlangıç -->
+<div class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Film Kişisinin Yorumları</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Adı Soyadı</th>
+                            <th>Yorumu</th>
+                            <th>Puanı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comments">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Kişi Yorumlarını Gösterme Etiketi Bitiş -->
+
+<!-- Kişi Güncelleme Etiketi Başlangıç -->
+<div class="modal fade" data-backdrop="static" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModalLabel">Kişi Güncelle</h1>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="updatePersonId" />
+                    <p>Kişi Id: <b id="spanPersonId"></b></p>
+                    <div class="form-group">
+                        <label for="updateFirstname">İsim</label>
+                        <input type="text" class="form-control" id="updateFirstname" />
+                    </div>
+                    <div class="form-group">
+                        <label for="updateLastname">Soyisim</label>
+                        <input type="text" class="form-control" id="updateLastname" />
+                    </div>
+                    <div class="form-group">
+                        <label for="updateBirthdate">Doğum Tarihi</label>
+                        <input type="date" class="form-control" id="updateBirthdate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCountry">Ülke</label>
+                        <select id="updateCountry" class="form-control">
+                            <option value="-1" selected disabled>Lütfen bir ülke seçiniz.</option>
+                            @foreach (var item in Model.CountryItems)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateGender">Cinsiyet</label>
+                        <select id="updateGender" class="form-control">
+                            <option value="-1" selected disabled>Lütfen bir cinsiyet seçiniz.</option>
+                            @foreach (var item in Model.GenderItems)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateShortDescription">Kısa Açıklama</label>
+                        <textarea class="form-control" id="updateShortDescription" placeholder="Lütfen kısa bir açıklama giriniz."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="updateDescription">Açıklama</label>
+                        <textarea class="form-control" id="updateDescription" placeholder="Lütfen bir açıklama giriniz."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="updatePhoto">Fotoğraf Dosyası</label>
+                        <div class="input-group">
+                            <input type="file" class="custom-file-input" id="updatePhoto" placeholder="Lütfen bir resim dosyası giriniz." required>
+                            <label class="custom-file-label" for="updatePhoto">Dosya Seçiniz</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="reset" id="btnUpdatePersonClear" class="btn btn-danger">İçeriği Temizle</button>
+                        <button type="button" id="btnUpdate" class="btn btn-warning mx-2">Kişiyi Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Kişi Güncelleme Etiketi Bitiş -->

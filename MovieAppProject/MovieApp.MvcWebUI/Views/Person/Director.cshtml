@@ -1,0 +1,211 @@
+﻿@using MovieApp.MvcWebUI.Models.ViewModels;
+@model PersonCommentViewModel
+@{
+    Layout = "~/Views/Shared/_OtherLayout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Yorum eklemek için kullanılan komut
+            $("#addComment").click(function () {
+
+                var formData = new FormData();
+
+                var personId = $("#personId").val();
+                var comment = $("#comment").val();
+                var point = $("#point").val();
+
+                if (personId > 0 && comment.length > 0 && point > 0) {
+                    formData.append("personId", personId);
+                    formData.append("comment", comment);
+                    formData.append("point", point);
+
+                    $.ajax({
+                        url: "/PersonRating/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                                $("#noComment").remove();
+                                var newComment = '<blockquote>' +
+                                    '<div class="user">' +
+                                    '<h3 class="mx-4">' + response.userName + '</h3>' +
+                                    '</div>' +
+                                    '<div class="user-text my-3">' +
+                                    '<p class="lead">' + response.comment + '</p>' +
+                                    '</div>' +
+                                    '</blockquote>';
+                                $("#comments").append(newComment);
+                                $("#clearComment").trigger("click");
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: "Lütfen bir içerik giriniz.",
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+<div class="container-fluid px-3 my-5">
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <img id="actor-picture" src="@Model.Person.Photo" class="w-100 rounded-5" alt="">
+            <h1 class="text-center my-2">@Model.Person.FullName</h1>
+            <p class="text-center lead">@Model.Person.CountryName | @Model.Person.Age yaşında</p>
+            <div class="rating-wrap text-center mt-3">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= Model.Person.Points)
+                    {
+                        <span class="fa fa-star checked"></span>
+                    }
+                    else
+                    {
+                        <span class="fa fa-star"></span>
+                    }
+                }
+                <br>
+                <p class="mt-3">
+                    @if (Model.Person.Points > 0)
+                    {
+                        <b class="text-danger">@String.Format("{0:F2}", Model.Person.Points)/5 Puan</b>
+                    }
+                    else
+                    {
+                        <b class="text-danger">0/5 Puan</b>
+                    }
+                </p>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <h4 class="section-title fs-1 text-center">ÖZGEÇMİŞİ</h4>
+            <div class="border-bottom m-auto my-3 rounded-5"></div>
+            <p class="lead my-4">@Model.Person.ShortDescription</p>
+            <p class="lead my-4">@Model.Person.Description</p>
+            <h4 class="section-title fs-1 text-center mt-5">OYNADIĞI & YÖNETTİĞİ FİLMLER</h4>
+            <div class="border-bottom m-auto my-3 rounded-5"></div>
+            <div class="container mt-5">
+                <div class="row">
+                    @if (Model.Person.MoviePersons.Count > 0)
+                    {
+                        var groupedPersons = Model.Person.MoviePersons.GroupBy(mp => mp.MovieId);
+                        foreach (var group in groupedPersons)
+                        {
+                            var movie = group.First();
+                            <div class="col-6 col-md-4 col-lg-3 mb-2">
+                                <a href="/Movie/Movie/@movie.MovieId"><img src="@movie.MoviePhoto" class="img-thumbnail" alt="..."></a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="fs-1">HENÜZ BİR FİLMDE YER ALMAMIŞ...</div>
+                    }
+                </div>
+            </div>
+            <h4 class="section-title fs-1 text-center mt-5">YORUMLAR</h4>
+            <div class="border-bottom m-auto my-3 rounded-5"></div>
+            <div class="container">
+                <div class="card">
+                    <div id="comments" class="card-body">
+                        @if (Model.Person.PersonRatings.Count > 0)
+                        {
+                            @foreach (var item in Model.Person.PersonRatings)
+                            {
+                                <blockquote>
+                                    <div class="user">
+                                        <h3 class="mx-4">@item.UserName</h3>
+                                    </div>
+                                    <div class="user-text my-3">
+                                        <p class="lead">@item.Comment</p>
+                                    </div>
+                                </blockquote>
+                            }
+                        }
+                        else
+                        {
+                            <div id="noComment">
+                                <div class="fs-1 text-center">HENÜZ YORUM YOK...</div>
+                                <div class="fs-3 text-center mt-3">İlk Yorumu Yapan Sen Ol...</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="section-title fs-1 text-center mt-5">YORUM YAP & DEĞERLENDİR</h4>
+            <div class="border-bottom m-auto my-3 rounded-5"></div>
+            <div class="card">
+                <div  class="card-body">
+                    @if (Model.User != null)
+                    {
+                        <form>
+                            <input id="personId" value="@Model.Person.Id" style="display: none;" type="text" />
+                            <div class="mb-3">
+                                <textarea class="form-control" id="comment" placeholder="Yorumunuz"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <select id="point" class="form-select my-3">
+                                        <option selected disabled>Derecelendirme</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3">
+                                    <button type="reset" id="clearComment" class="btn btn-danger my-3">İçeriği Temizle</button>
+                                    <button type="button" id="addComment" class="btn btn-warning my-3">Gönder</button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <a href="/Authentication/LogIn" class="btn btn-primary mx-2">YORUM YAPABİLMEK İÇİN LÜTFEN GİRİŞ YAPINIZ.</a>
+                            <a href="/Authentication/LogIn" class="btn btn-warning mx-2">ÜYELİĞİNİZ YOK İSE ÜYE OLUNUZ.</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

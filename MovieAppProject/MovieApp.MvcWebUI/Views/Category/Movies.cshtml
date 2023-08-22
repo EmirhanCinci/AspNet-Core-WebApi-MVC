@@ -1,0 +1,47 @@
+﻿@using MovieApp.MvcWebUI.Models.ViewModels;
+@model CategoryViewModel
+@{
+    Layout = "~/Views/Shared/_OtherLayout.cshtml";
+}
+
+
+<!-- Other Movies Etiketi Başlangıç -->
+<section id="other-movies" class="px-3">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Kategoriler etiketi başlangıç -->
+            <div id="movie-categories" class="col-12 col-lg-2">
+                <h2 class="text-center my-3">Kategoriler</h2>
+                <div class="list-group">
+                    @foreach (var item in Model.CategoryList)
+                    {
+                        <a href="/Category/Movies/@item.Id" class="list-group-item list-group-item-action" value="@item.Id">@item.Name</a>
+                    }
+                </div>
+            </div>
+            <!-- Kategoriler etiketi bitiş -->
+            <div class="col-12 col-lg-10">
+                <h2 class="text-center my-3">@Model.CategoryWithMoviesItem.Name Filmleri</h2>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-xl-3 g-4">
+                    @foreach (var item in Model.CategoryWithMoviesItem.Movies)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <img src="@item.Photo" class="card-img-top w-100" alt="@item.Name">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <p class="card-text">@item.ShortDescription</p>
+                                </div>
+                                <div class="card-footer d-flex justify-content-center gap-3">
+                                    <a href="/Movie/Movie/@item.Id" class="btn btn-secondary">Film Profili</a>
+                                    <a href="@item.Trailer" target="_blank" class="btn btn-warning">Fragmanı İzle</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Other Movies Etiketi Bitiş -->

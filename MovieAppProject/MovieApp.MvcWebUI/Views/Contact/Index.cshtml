@@ -1,0 +1,127 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items;
+@model List<CountryItem>
+@{
+    Layout = "~/Views/Shared/_OtherLayout.cshtml";
+}
+
+@section customStyles {
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts {
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+    <script>
+        $(document).ready(function () {
+            // İletişim mesajı eklemek için gerekli JS komutları
+            $("#btnAddContact").click(function () {
+
+                var firstName = $("#name").val();
+                var lastName = $("#surname").val();
+                var email = $("#email").val();
+                var phone = $("#phone").val();
+                var countryId = $("#country").val();
+                var subject = $("#subject").val();
+                var message = $("#message").val();
+
+                if (firstName.length > 0 && lastName.length > 0 && email.length > 0 && phone.length > 0 && subject.length > 0 && message.length > 0) {
+                    var formData = new FormData();
+
+                    formData.append("firstName", firstName);
+                    formData.append("lastName", lastName);
+                    formData.append("email", email);
+                    formData.append("phone", phone);
+                    formData.append("countryId", countryId);
+                    formData.append("subject", subject);
+                    formData.append("message", message);
+
+                    $.ajax({
+                        url: "/Contact/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                })
+                                $("#btnClear").trigger("click");
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: "Lütfen form alanlarını eksiksiz doldurunuz.",
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+ <h4 class="section-title text-center fs-1 mt-5">BİZİMLE İLETİŞİME GEÇİN</h4>
+<div class="border-bottom m-auto my-3 rounded-5"></div>
+<div class="container my-5">
+    <form class="row g-3">
+        <div class="col-md-6">
+            <label for="name" class="form-label">İsim</label>
+            <input type="text" class="form-control" id="name" placeholder="Lütfen bir isim giriniz.">
+        </div>
+        <div class="col-md-6">
+            <label for="surname" class="form-label">Soyisim</label>
+            <input type="text" class="form-control" id="surname" placeholder="Lütfen bir soyisim giriniz.">
+        </div>
+        <div class="col-12">
+            <label for="email" class="form-label">E-Mail</label>
+            <input type="email" class="form-control" id="email" placeholder="ornek@mail.com">
+        </div>
+        <div class="col-12">
+            <label for="phone" class="form-label">Telefon Numarası</label>
+            <input type="text" class="form-control" id="phone" placeholder="0 (5XX) XXX XX-XX">
+        </div>
+        <div class="col-12">
+            <label for="country" class="form-label">Ülke</label>
+            <select id="country" class="form-select">
+                <option selected disabled>Seçiniz...</option>
+                @foreach (var item in Model)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-12">
+            <label for="subject" class="form-label">Konu</label>
+            <input type="text" id="subject" class="form-control" />
+        </div>
+        <div class="col-12">
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Lütfen mesajınızı giriniz..." id="message" style="height: 100px"></textarea>
+                <label for="message">Mesajınız</label>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="reset" id="btnClear" class="btn btn-danger">İçeriği Temizle</button>
+            <button type="button" id="btnAddContact" class="btn btn-warning">Gönder</button>
+        </div>
+    </form>
+</div>

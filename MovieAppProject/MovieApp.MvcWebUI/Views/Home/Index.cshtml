@@ -1,0 +1,64 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items;
+@model List<MovieItem>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 class="section-title fs-1">EN POPÜLER FİLMLER</h4>
+<div class="border-bottom m-auto my-3 rounded-5"></div>
+<p class="lead my-4">CNC Film & Dizi sitesinde en popüler filmler alanı, izleyicilerin kalbini çalacak birbirinden etkileyici ve sürükleyici yapımları bir araya getiriyor. Popülerlikleri sayesinde seyirci kitlesi tarafından en çok ilgi gören filmleri burada bulabilir ve keyifle izleyebilirsiniz.</p>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-sm-6 col-lg-3 p-3">
+                <button type="button" class="card rounded-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop-@item.Id">
+                    <img src="@item.Photo" class="rounded-4" alt="@item.Name">
+                </button>
+                <div class="modal fade" id="staticBackdrop-@item.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered w-100 modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">@item.Name</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-lg-12 col-xl-4 px-3">
+                                            <img src="@item.Photo" class="rounded-4" alt="@item.Name">
+                                            <h3 class="my-2">@item.Name</h3>
+                                            <p>@item.ReleaseDate.Value.Year & @item.Duration dakika</p>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-lg-12 col-xl-8 px-3">
+                                            <p>@item.Description</p>
+                                            <h4>OYUNCULAR</h4>
+                                            <div class="container">
+                                                <div class="row">
+                                                    @foreach (var persons in item.MoviePersons)
+                                                    {
+                                                        if (persons.PersonTypeId == 2)
+                                                        {
+                                                            <div class="col-4">
+                                                                <img src="@persons.PersonPhoto" class="w-75 rounded-4 my-2" alt="">
+                                                                <h5>@persons.PersonName</h5>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                                <a class="btn btn-warning" href="@item.Trailer" target="_blank">Filmi İzle</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,340 @@
+﻿@using MovieApp.MvcWebUI.Areas.Admin.Models.Items;
+@model List<UserItem>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section customStyles{
+    <link rel="stylesheet" href="~/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/admin/plugins/sweetalert2/sweetalert2.css">
+}
+
+@section customScripts{
+    <script src="~/admin/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="~/admin/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/admin/plugins/jszip/jszip.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="~/admin/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="~/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="~/admin/plugins/sweetalert2/sweetalert2.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Tablo için gerekli JS komutları
+            $("#example1").DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                order: [
+                    [3, 'desc']
+                ],
+                "columnDefs": [{
+                    "targets": 4,
+                    "orderable": false,
+                }],
+                "lengthChange": false,
+                "paging": false,
+                "searching": true
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // Kullanıcı eklemek için gerekli JS komutları
+            $("#btnAddUser").click(function () {
+                var nickname = $("#nickname").val();
+                var firstname = $("#firstname").val();
+                var lastname = $("#lastname").val();
+                var email = $("#email").val();
+                var password = $("#password").val();
+
+                if (nickname.length != 0 && firstname.length != 0 && lastname.length != 0 && email.length != 0 && password.length != 0) 
+                {
+                    var formData = new FormData();
+
+                    formData.append("nickname", nickname);
+                    formData.append("firstname", firstname);
+                    formData.append("lastname", lastname);
+                    formData.append("email", email);
+                    formData.append("password", password);
+
+                    $.ajax({
+                        url: "/Admin/User/Save",
+                        method: "post",
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                Swal.fire({
+                                    title: 'İşlem Başarılı',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                })
+                                var table = $('#example1').DataTable();
+                                var rowNode = table.row.add([response.nickname, firstname + " " + lastname, response.email, 0, "İşlem yapmak için sayfayı güncelleyiniz."]).draw().node();
+                                $(rowNode).css('color', 'red').animate({ color: 'red' });
+                                $("#btnClearAddUser").trigger("click");
+                            }
+                            else {
+                                Swal.fire({
+                                    title: 'İşlem Başarısız',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        }
+                    });
+                }
+                else 
+                {
+                    Swal.fire({
+                        title: 'İşlem Başarısız',
+                        text: "Lütfen form alanlarını eksiksiz doldurunuz.",
+                        icon: 'error',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+
+            // Kullanıcı silmek için gerekli JS komutları
+            $(".btnDeleteUser").click(function () {
+                var userId = $(this).attr("deleteUserId");
+
+                Swal.fire({
+                    title: 'Silme işlemi geri alınamaz!',
+                    text: "Kullanıcı adı " + userId + " olan kullanıcıyı silmek istiyor musunuz?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sil!',
+                    cancelButtonText: 'Vazgeç!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/Admin/User/Delete/" + userId,
+                            method: "post",
+                            datatype: "json",
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    Swal.fire({
+                                        title: 'İşlem Başarılı',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                    });
+                                    var table = $('#example1').DataTable();
+                                    table.row($("#tr-" + userId)).remove().draw();
+                                }
+                                else {
+                                    var errors = "";
+                                    for (var i = 0; i < response.errorMessages.length; i++) {
+                                        errors += response.errorMessages[i] + "<br />";
+                                    }
+                                    Swal.fire({
+                                        title: 'İşlem Başarısız',
+                                        text: response.message + "<br />" + errors,
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'Tamam',
+                                        icon: 'error',
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'İşlem İptal Edildi',
+                            icon: 'info',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Tamam'
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+}
+
+<!-- Kullanıcı Ekle Etiketi Başlangıç -->
+<div class="card card-primary">
+    <!-- Form etiketi başlık etiketi başlangıç -->
+    <div class="card-header">
+        <h3 class="card-title">Yeni Kullanıcı Ekle</h3>
+    </div>
+    <!-- Form etiketi başlık etiketi bitiş -->
+
+    <!-- Form etiketi başlangıç-->
+    <form>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="nickname">Kullanıcı Adı</label>
+                <input type="text" class="form-control" id="nickname" placeholder="Lütfen bir kullanıcı adı giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="firstname">Adı</label>
+                <input type="text" class="form-control" id="firstname" placeholder="Lütfen bir ad giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="lastname">Soyadı</label>
+                <input type="text" class="form-control" id="lastname" placeholder="Lütfen bir soyad giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Adresi</label>
+                <input type="email" class="form-control" id="email" placeholder="Lütfen bir email giriniz." required>
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre</label>
+                <input type="password" class="form-control" id="password" placeholder="Lütfen bir şifre giriniz." required>
+            </div>
+        </div>
+        <div class="card-footer d-flex">
+            <button type="reset" id="btnClearAddUser" class="btn btn-danger">Form İçeriğini Temizle</button>
+            <button type="button" id="btnAddUser" class="btn btn-warning mx-2">Yeni Kullanıcı Ekle</button>
+        </div>
+    </form>
+    <!-- Form etiketi bitiş -->
+</div>
+<!-- Kullanıcı Ekle Etiketi Bitiş -->
+
+<hr />
+
+<!-- Kullanıcı Tablosu Etiketi Başlangıç -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <!-- Başlık Etiketi Başlangıç -->
+            <div class="card-header">
+                <h2>KULLANICILAR</h2>
+            </div>
+            <!-- Başlık Etiketi Bitiş -->
+            <!-- Tablo Etiketi Başlangıç -->
+            <div class="card-body table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Kullanıcı Adı</th>
+                            <th>Adı Soyadı</th>
+                            <th>İletişim</th>
+                            <th>Yaptığı Yorum Sayısı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableContent">
+                        @foreach (var item in Model)
+                        {
+                            var totalComments = item.MovieRatings.Count + item.PersonRatings.Count;
+                            <tr id="tr-@item.Nickname">
+                                <th>@item.Nickname</th>
+                                <th>@item.FullName</th>
+                                <th>@item.Email</th>
+                                <th><b class="text-danger">@totalComments</b></th>
+                                <th>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary mx-2" data-toggle="modal" data-target="#modal-primary-@item.Nickname">Yorumlarını Göster</button>
+                                        <div class="modal fade" id="modal-primary-@item.Nickname">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">@item.FullName Kişisinin Yaptığı Yorumlar</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Film Adı</th>
+                                                                    <th>Yorumu</th>
+                                                                    <th>Puanı</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var movieRating in item.MovieRatings)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@movieRating.MovieName</td>
+                                                                        <td>@movieRating.Comment</td>
+                                                                        <td>@movieRating.Point</td>
+                                                                    </tr>
+                                                                }
+                                                                @if (item.MovieRatings.Count == 0)
+                                                                {
+                                                                    <tr>
+                                                                        <th colspan="3">Henüz bir yorum yapmamış.</th>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+
+                                                        <hr/>
+                                                        <table width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Oyuncu veya Yönetmen Adı</th>
+                                                                    <th>Yorumu</th>
+                                                                    <th>Puanı</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var personRating in item.PersonRatings)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@personRating.PersonName</td>
+                                                                        <td>@personRating.Comment</td>
+                                                                        <td>@personRating.Point</td>
+                                                                    </tr>
+                                                                }
+                                                                @if (item.PersonRatings.Count == 0)
+                                                                {
+                                                                    <tr>
+                                                                        <th colspan="3">Henüz bir yorum yapmamış.</th>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-end">
+                                                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="btn btn-danger btnDeleteUser mx-2" deleteUserId="@item.Nickname">Sil</button>
+                                    </div>
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Kullanıcı Adı</th>
+                            <th>Adı Soyadı</th>
+                            <th>İletişim</th>
+                            <th>Yaptığı Yorum Sayısı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Tablo Etiketi Bitiş -->
+        </div>
+    </div>
+</div>
+<!-- Kullanıcı Tablosu Etiketi Bitiş -->
